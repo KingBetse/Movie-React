@@ -1,33 +1,41 @@
 import { useEffect, useState } from "react";
 import searchImg from "./searchImg.svg";
+import MovieCard from "./MovieCard";
 
 const App = () => {
   const [movies, setMovies] = useState([]);
-  useEffect(() => {
-    searchM0vies("superman");
-  });
+  const [titlee, setTitlee] = useState("");
+
   const API_link = "http://www.omdbapi.com/?i=tt3896198&apikey=3d9ece39";
 
-  const searchM0vies = async (title) => {
+  const searchMovies = async (title) => {
     const res = await fetch(`${API_link}&s=${title}`);
     const data = await res.json();
-    setMovies(data.search);
+    console.log(title);
+    // console.log(data.sea);
+    setMovies(data.Search);
   };
-
+  useEffect(() => {
+    searchMovies("about");
+  }, []);
   return (
     <div className="app">
       <h1>MovieLand</h1>
       <div className="search">
         <input
           placeholder="search for Movies"
-          value="superman"
-          onChange={() => {}}
+          value={titlee}
+          onChange={(e) => {
+            setTitlee(e.target.value);
+          }}
         />
-        <img src={searchImg} alt="name" />
+        <img src={searchImg} alt="name" onClick={() => searchMovies(titlee)} />
       </div>
       {movies?.length > 0 ? (
         <div className="container">
-          <MovieCard />
+          {movies.map((movies) => (
+            <MovieCard movies={movies} />
+          ))}
         </div>
       ) : (
         <div>There is no Movies in here</div>
@@ -35,21 +43,5 @@ const App = () => {
     </div>
   );
 };
-const MovieCard = () => {
-  return (
-    <div className="movie">
-      <div>
-        <p>year</p>
-      </div>
 
-      <div>
-        <img src="poster" alt="name" />
-      </div>
-      <div>
-        <span>type</span>
-        <h3>title</h3>
-      </div>
-    </div>
-  );
-};
 export default App;
